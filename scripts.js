@@ -1,0 +1,731 @@
+/**
+ * BAR KAIXO - SCRIPT PRINCIPAL
+ * Gestión de interactividad: filtrado de menú, modal de reserva, navegación por teclado
+ * Versión: 1.0.0
+ */
+
+(function() {
+    'use strict';
+
+    // ===== CONFIGURACIÓN Y CONSTANTES =====
+    const CONFIG = {
+        ANIMATION_DURATION: 400,
+        DEBOUNCE_DELAY: 300,
+        MOBILE_BREAKPOINT: 768,
+        FADE_CLASS: 'fade-in',
+        HIDDEN_CLASS: 'hidden',
+        ACTIVE_CLASS: 'active',
+        ERROR_CLASS: 'error'
+    };
+
+    // ===== ELEMENTOS DEL DOM =====
+    const elements = {
+        // Navegación y filtros
+        categoryPills: document.querySelectorAll('.pill'),
+        menuCards: document.querySelectorAll('.menu-card'),
+        menuGrid: document.getElementById('menu-content'),
+        
+        // Modal y formulario
+        modal: document.getElementById('reserva-modal'),
+        modalTrigger: document.querySelector('.cta-button'),
+        modalClose: document.querySelector('.modal-close'),
+        reservationForm: document.getElementById('reservation-form'),
+        cancelButton: document.getElementById('cancel-reservation'),
+        
+        // Campos del formulario
+        nameField: document.getElementById('name'),
+        dateField: document.getElementById('date'),
+        timeField: document.getElementById('time'),
+        guestsField: document.getElementById('guests'),
+        phoneField: document.getElementById('phone'),
+        notesField: document.getElementById('notes')
+    };
+
+    // ===== GESTIÓN DE FILTROS DE CATEGORÍAS =====
+    class CategoryFilter {
+        constructor() {
+            this.currentCategory = 'all';
+            this.isAnimating = false;
+            this.init();
+        }
+
+        init() {
+            this.bindEvents();
+            this.setupKeyboardNavigation();
+        }
+
+        bindEvents() {
+            elements.categoryPills.forEach(pill => {
+                pill.addEventListener('click', (e) => this.handlePillClick(e));
+            });
+        }
+
+        setupKeyboardNavigation() {
+            elements.categoryPills.forEach((pill, index) => {
+                pill.addEventListener('keydown', (e) => {
+                    this.handleKeyNavigation(e, index);
+                });
+            });
+        }
+
+        handleKeyNavigation(event, currentIndex) {
+            const { key } = event;
+            let targetIndex = currentIndex;
+
+            switch (key) {
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    event.preventDefault();
+                    targetIndex = (currentIndex + 1) % elements.categoryPills.length;
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    event.preventDefault();
+                    targetIndex = currentIndex === 0 ? elements.categoryPills.length - 1 : currentIndex - 1;
+                    break;
+                case 'Home':
+                    event.preventDefault();
+                    targetIndex = 0;
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    targetIndex = elements.categoryPills.length - 1;
+                    break;
+                case 'Enter':
+                case ' ':
+                    event.preventDefault();
+                    this.selectPill(elements.categoryPills[currentIndex]);
+                    return;
+                default:
+                    return;
+            }
+
+            this.focusPill(targetIndex);
+        }
+
+        focusPill(index) {
+            // Actualizar tabindex
+            elements.categoryPills.forEach((pill, i) => {
+                pill.tabIndex = i === index ? 0 : -1;
+            });
+            
+            elements.categoryPills[index].focus();
+        }
+
+        handlePillClick(event) {
+            event.preventDefault();
+            // Usar currentTarget para que funcione al pulsar icono o texto dentro del botón
+            this.selectPill(event.currentTarget);
+        }
+
+        selectPill(pill) {
+            if (this.isAnimating) return;
+
+            const category = pill.dataset.category;
+            if (category === this.currentCategory) return;
+
+            this.updateActiveState(pill);
+            this.filterCards(category);
+            this.currentCategory = category;
+
+            // Anunciar cambio para lectores de pantalla
+            this.announceFilterChange(category);
+
+            // Desplazar la vista para centrar la sección seleccionada
+            // Pequeño retraso para no interferir con la animación de filtrado
+            setTimeout(() => this.scrollToCategoryView(), 200);
+        }
+
+        updateActiveState(activePill) {
+            elements.categoryPills.forEach(pill => {
+                const isActive = pill === activePill;
+                pill.classList.toggle(CONFIG.ACTIVE_CLASS, isActive);
+                pill.setAttribute('aria-selected', isActive);
+                pill.tabIndex = isActive ? 0 : -1;
+            });
+        }
+
+        filterCards(category) {
+            this.isAnimating = true;
+
+            // Fade out todas las cards
+            elements.menuCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+            });
+
+            setTimeout(() => {
+                // Mostrar/ocultar cards según categoría
+                elements.menuCards.forEach(card => {
+                    const cardCategory = card.dataset.category;
+                    const shouldShow = category === 'all' || cardCategory === category;
+                    
+                    if (shouldShow) {
+                        card.classList.remove(CONFIG.HIDDEN_CLASS);
+                        card.classList.add(CONFIG.FADE_CLASS);
+                        // Fade in con delay escalonado
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, Math.random() * 100);
+                    } else {
+                        card.classList.add(CONFIG.HIDDEN_CLASS);
+                        card.classList.remove(CONFIG.FADE_CLASS);
+                    }
+                });
+
+                setTimeout(() => {
+                    this.isAnimating = false;
+                }, CONFIG.ANIMATION_DURATION);
+            }, 150);
+        }
+
+        announceFilterChange(category) {
+            const categoryNames = {
+                'all': 'Todos los platos',
+                'entrantes-raciones': 'Entrantes / Raciones',
+                'ensaladas': 'Ensaladas',
+                'burritos-wraps': 'Burritos y Wraps',
+                'sandwich': 'Sándwich',
+                'hamburguesas': 'Hamburguesas',
+                'bocadillos': 'Bocadillos',
+                'platos-combinados': 'Platos Combinados',
+                'brasil': 'Platos Brasileños'
+            };
+
+            const announcement = `Mostrando ${categoryNames[category] || category}`;
+            
+            // Crear elemento temporal para anuncio
+            const announcer = document.createElement('div');
+            announcer.setAttribute('aria-live', 'polite');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.className = 'sr-only';
+            announcer.textContent = announcement;
+            
+            document.body.appendChild(announcer);
+            setTimeout(() => document.body.removeChild(announcer), 1000);
+        }
+
+        // Centra en pantalla la primera card visible de la categoría seleccionada (o la parrilla)
+        scrollToCategoryView() {
+            const grid = elements.menuGrid;
+            if (!grid) return;
+
+            const visibleCard = Array.from(grid.querySelectorAll('.menu-card'))
+                .find(card => !card.classList.contains(CONFIG.HIDDEN_CLASS));
+
+            const target = visibleCard || grid;
+            const rect = target.getBoundingClientRect();
+
+            // Calcular posición para centrar el objetivo en viewport
+            const targetTop = rect.top + window.scrollY;
+            const centerOffset = Math.max(0, (window.innerHeight / 2) - (target.offsetHeight / 2));
+            let top = targetTop - centerOffset;
+
+            // Ajuste ligero si hay navbar fija muy alta (evitar solape en la parte superior)
+            const nav = document.querySelector('.navbar');
+            if (nav) {
+                const navH = nav.offsetHeight || 0;
+                // Si el centro calculado queda por encima de la navbar, compénsalo levemente
+                top = Math.max(0, top - Math.min(20, navH / 4));
+            }
+
+            window.scrollTo({ top, behavior: 'smooth' });
+        }
+    }
+
+    // ===== GESTIÓN DEL MODAL DE RESERVA =====
+    class ReservationModal {
+        constructor() {
+            this.isOpen = false;
+            this.focusableElements = [];
+            this.firstFocusableElement = null;
+            this.lastFocusableElement = null;
+            this.init();
+        }
+
+        init() {
+            this.bindEvents();
+            this.setupFormValidation();
+            this.setMinDate();
+        }
+
+        bindEvents() {
+            // Abrir modal
+            elements.modalTrigger?.addEventListener('click', () => this.open());
+            
+            // Cerrar modal
+            elements.modalClose?.addEventListener('click', () => this.close());
+            elements.cancelButton?.addEventListener('click', () => this.close());
+            
+            // Cerrar con Escape o click en overlay
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.isOpen) {
+                    this.close();
+                }
+            });
+
+            elements.modal?.addEventListener('click', (e) => {
+                if (e.target === elements.modal) {
+                    this.close();
+                }
+            });
+
+            // Envío del formulario
+            elements.reservationForm?.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+
+        setupFormValidation() {
+            const fields = [elements.nameField, elements.dateField, elements.timeField, 
+                          elements.guestsField, elements.phoneField];
+            
+            fields.forEach(field => {
+                if (field) {
+                    field.addEventListener('blur', () => this.validateField(field));
+                    field.addEventListener('input', () => this.clearError(field));
+                }
+            });
+        }
+
+        setMinDate() {
+            if (elements.dateField) {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                elements.dateField.min = tomorrow.toISOString().split('T')[0];
+            }
+        }
+
+        open() {
+            this.isOpen = true;
+            elements.modal.classList.add(CONFIG.ACTIVE_CLASS);
+            elements.modal.setAttribute('aria-hidden', 'false');
+            
+            // Configurar foco
+            this.setupFocusManagement();
+            
+            // Prevenir scroll del body
+            document.body.style.overflow = 'hidden';
+            
+            // Foco inicial en el primer campo
+            setTimeout(() => {
+                if (this.firstFocusableElement) {
+                    this.firstFocusableElement.focus();
+                }
+            }, 100);
+
+            // Anunciar apertura
+            this.announceModalState('Formulario de reserva abierto');
+        }
+
+        close() {
+            this.isOpen = false;
+            elements.modal.classList.remove(CONFIG.ACTIVE_CLASS);
+            elements.modal.setAttribute('aria-hidden', 'true');
+            
+            // Restaurar scroll
+            document.body.style.overflow = '';
+            
+            // Devolver foco al botón trigger
+            if (elements.modalTrigger) {
+                elements.modalTrigger.focus();
+            }
+
+            // Limpiar formulario
+            this.resetForm();
+            
+            // Anunciar cierre
+            this.announceModalState('Formulario de reserva cerrado');
+        }
+
+        setupFocusManagement() {
+            const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            this.focusableElements = Array.from(elements.modal.querySelectorAll(focusableSelector))
+                .filter(el => !el.disabled && el.offsetParent !== null);
+            
+            this.firstFocusableElement = this.focusableElements[0];
+            this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];
+
+            // Trap focus
+            elements.modal.addEventListener('keydown', (e) => this.handleFocusTrap(e));
+        }
+
+        handleFocusTrap(event) {
+            if (event.key !== 'Tab') return;
+
+            if (event.shiftKey) {
+                if (document.activeElement === this.firstFocusableElement) {
+                    event.preventDefault();
+                    this.lastFocusableElement.focus();
+                }
+            } else {
+                if (document.activeElement === this.lastFocusableElement) {
+                    event.preventDefault();
+                    this.firstFocusableElement.focus();
+                }
+            }
+        }
+
+        validateField(field) {
+            const value = field.value.trim();
+            let isValid = true;
+            let errorMessage = '';
+
+            switch (field.id) {
+                case 'name':
+                    if (!value) {
+                        errorMessage = 'El nombre es obligatorio';
+                        isValid = false;
+                    } else if (value.length < 2) {
+                        errorMessage = 'El nombre debe tener al menos 2 caracteres';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'date':
+                    if (!value) {
+                        errorMessage = 'La fecha es obligatoria';
+                        isValid = false;
+                    } else {
+                        const selectedDate = new Date(value);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        if (selectedDate <= today) {
+                            errorMessage = 'La fecha debe ser posterior a hoy';
+                            isValid = false;
+                        }
+                    }
+                    break;
+
+                case 'time':
+                    if (!value) {
+                        errorMessage = 'La hora es obligatoria';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'guests':
+                    if (!value) {
+                        errorMessage = 'El número de personas es obligatorio';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'phone':
+                    if (!value) {
+                        errorMessage = 'El teléfono es obligatorio';
+                        isValid = false;
+                    } else if (!/^[6-9]\d{8}$/.test(value.replace(/\s/g, ''))) {
+                        errorMessage = 'Introduce un teléfono válido (ej: 600123456)';
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            this.showFieldError(field, errorMessage);
+            return isValid;
+        }
+
+        showFieldError(field, message) {
+            const errorElement = document.getElementById(`${field.id}-error`);
+            
+            if (message) {
+                field.classList.add(CONFIG.ERROR_CLASS);
+                field.setAttribute('aria-invalid', 'true');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.setAttribute('aria-live', 'polite');
+                }
+            } else {
+                field.classList.remove(CONFIG.ERROR_CLASS);
+                field.setAttribute('aria-invalid', 'false');
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
+            }
+        }
+
+        clearError(field) {
+            this.showFieldError(field, '');
+        }
+
+        handleSubmit(event) {
+            event.preventDefault();
+            
+            // Validar todos los campos requeridos
+            const requiredFields = [elements.nameField, elements.dateField, elements.timeField, 
+                                  elements.guestsField, elements.phoneField];
+            
+            let isFormValid = true;
+            requiredFields.forEach(field => {
+                if (field && !this.validateField(field)) {
+                    isFormValid = false;
+                }
+            });
+
+            if (!isFormValid) {
+                // Foco en el primer campo con error
+                const firstError = elements.modal.querySelector('.error');
+                if (firstError) {
+                    firstError.focus();
+                }
+                return;
+            }
+
+            // Simular envío de formulario
+            this.submitReservation();
+        }
+
+        submitReservation() {
+            const formData = new FormData(elements.reservationForm);
+            const reservationData = Object.fromEntries(formData.entries());
+            
+            // Mostrar indicador de carga
+            const submitButton = elements.reservationForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Enviando...';
+            submitButton.disabled = true;
+
+            // Simular llamada a API (en producción aquí iría la llamada real)
+            setTimeout(() => {
+                console.log('Datos de reserva:', reservationData);
+                
+                // Mostrar mensaje de éxito
+                this.showSuccessMessage();
+                
+                // Restaurar botón
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+                
+                // Cerrar modal después de un momento
+                setTimeout(() => this.close(), 2000);
+            }, 1500);
+        }
+
+        showSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.innerHTML = `
+                <div style="background: #10b981; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+                    <strong>¡Reserva confirmada!</strong><br>
+                    Recibirás un email de confirmación en breve.
+                </div>
+            `;
+            
+            const formContent = elements.reservationForm;
+            formContent.insertBefore(successDiv.firstElementChild, formContent.firstChild);
+        }
+
+        resetForm() {
+            elements.reservationForm?.reset();
+            
+            // Limpiar errores
+            const errorElements = elements.modal.querySelectorAll('.error-message');
+            errorElements.forEach(el => el.textContent = '');
+            
+            const errorFields = elements.modal.querySelectorAll('.error');
+            errorFields.forEach(field => {
+                field.classList.remove(CONFIG.ERROR_CLASS);
+                field.setAttribute('aria-invalid', 'false');
+            });
+
+            // Limpiar mensajes de éxito
+            const successMessages = elements.modal.querySelectorAll('[style*="background: #10b981"]');
+            successMessages.forEach(msg => msg.remove());
+        }
+
+        announceModalState(message) {
+            const announcer = document.createElement('div');
+            announcer.setAttribute('aria-live', 'assertive');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.className = 'sr-only';
+            announcer.textContent = message;
+            
+            document.body.appendChild(announcer);
+            setTimeout(() => document.body.removeChild(announcer), 1000);
+        }
+    }
+
+    // ===== UTILIDADES GENERALES =====
+    class Utils {
+        static debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        static isMobile() {
+            return window.innerWidth < CONFIG.MOBILE_BREAKPOINT;
+        }
+
+        static smoothScrollTo(element, offset = 0) {
+            const elementPosition = element.offsetTop - offset;
+            window.scrollTo({
+                top: elementPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // ===== MEJORAS DE NAVEGACIÓN =====
+    class NavigationEnhancements {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            this.setupSmoothScrolling();
+            this.setupActiveNavigation();
+            this.setupStickyPillsBackground();
+            this.setupNavbarCollapseOnScroll();
+        }
+
+        setupSmoothScrolling() {
+            const navLinks = document.querySelectorAll('a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        Utils.smoothScrollTo(targetElement, 80); // Offset para navbar fija
+                    }
+                });
+            });
+        }
+
+        setupActiveNavigation() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            window.addEventListener('scroll', Utils.debounce(() => {
+                const scrollPosition = window.scrollY + 100;
+                
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        const section = document.getElementById(href.substring(1));
+                        if (section) {
+                            const sectionTop = section.offsetTop;
+                            const sectionBottom = sectionTop + section.offsetHeight;
+                            
+                            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                                navLinks.forEach(l => l.classList.remove('active'));
+                                link.classList.add('active');
+                            }
+                        }
+                    }
+                });
+            }, 100));
+        }
+    }
+
+    // Añadir fondo sutil cuando las pills están pegadas
+    NavigationEnhancements.prototype.setupStickyPillsBackground = function() {
+        const pillsContainer = document.querySelector('.category-pills-container');
+        if (!pillsContainer) return;
+
+        const onScroll = Utils.debounce(() => {
+            const stuck = window.scrollY + 1 >= (pillsContainer.offsetTop - parseInt(getComputedStyle(pillsContainer).top || '0'));
+            pillsContainer.classList.toggle('stuck', stuck);
+        }, 50);
+
+        window.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', onScroll);
+        // estado inicial
+        onScroll();
+    };
+
+    // Colapsar la navbar al hacer scroll dejando solo el logo
+    NavigationEnhancements.prototype.setupNavbarCollapseOnScroll = function() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+
+        const THRESHOLD = 80; // px de scroll para colapsar
+        const onScroll = Utils.debounce(() => {
+            const shouldCollapse = window.scrollY > THRESHOLD;
+            navbar.classList.toggle('collapsed', shouldCollapse);
+        }, 50);
+
+        window.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', onScroll);
+        onScroll();
+    };
+
+    // ===== INICIALIZACIÓN =====
+    function init() {
+        // Verificar que el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+            return;
+        }
+
+        try {
+            // Inicializar componentes
+            new CategoryFilter();
+            new ReservationModal();
+            new NavigationEnhancements();
+
+            // Configuración inicial de accesibilidad
+            setupInitialAccessibility();
+            
+            // Configuración de lazy loading mejorado
+            setupEnhancedLazyLoading();
+
+            console.log('Bar Kaixo: Todos los componentes inicializados correctamente');
+            
+        } catch (error) {
+            console.error('Error inicializando la aplicación:', error);
+        }
+    }
+
+    function setupInitialAccessibility() {
+        // Configurar estados ARIA iniciales
+        elements.modal?.setAttribute('aria-hidden', 'true');
+        
+        // Configurar pills navigation
+        elements.categoryPills.forEach((pill, index) => {
+            pill.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+            pill.tabIndex = index === 0 ? 0 : -1;
+        });
+    }
+
+    function setupEnhancedLazyLoading() {
+        // Lazy loading nativo mejorado con intersection observer como fallback
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('loading');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            lazyImages.forEach(img => {
+                img.classList.add('loading');
+                imageObserver.observe(img);
+            });
+        }
+    }
+
+    // ===== EXPONER API PÚBLICA =====
+    window.BarKaixo = {
+        version: '1.0.0',
+        Utils,
+        init
+    };
+
+    // Inicializar automáticamente
+    init();
+
+})();

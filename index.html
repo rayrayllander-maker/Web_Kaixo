@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Kaixo - La calidez de Brasil, el corazón de Euskadi.</title>
+    <meta name="description" content="Descubre la auténtica cocina vasca en Bar Kaixo. Platos tradicionales con ingredientes frescos y de temporada.">
+    
+    <!-- Preconnect para optimización de fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navegación Principal -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <div class="nav-container">
+            <a href="#menu" class="nav-logo-link" aria-label="Ir al inicio del menú">
+                <img src="assets/logo.png" alt="Bar Kaixo" class="nav-logo">
+            </a>
+            <div class="nav-links">
+                <a href="#inicio" aria-label="Ir a inicio">Inicio</a>
+                <a href="#menu" aria-label="Ver menú">Menú</a>
+                <a href="#nosotros" aria-label="Sobre nosotros">Nosotros</a>
+                <a href="#contacto" aria-label="Información de contacto">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" role="banner">
+        <div class="hero-image">
+            <img src="assets/paella.jpg" alt="Deliciosa paella tradicional del Bar Kaixo" loading="eager">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-logo-group">
+                <div class="hero-logo-wrap" aria-hidden="true"></div>
+                <img src="assets/logo.png" alt="Logo Bar Kaixo" class="hero-logo">
+            </div>
+            <h1>Bar Kaixo</h1>
+            <p class="hero-subtitle">La calidez de Brasil, el corazón de Euskadi.</p>
+        </div>
+    </header>
+
+    <!-- Sección de Menú -->
+    <main class="main-content" id="menu">
+        <section class="menu-section" aria-labelledby="menu-heading">
+            <div class="container">
+                <h2 id="menu-heading" class="section-title">Nuestra Carta</h2>
+                
+                <!-- Pills de Categorías -->
+                <div class="category-pills-container">
+                    <div class="category-pills" role="tablist" aria-label="Categorías del menú">
+                        <button class="pill active" role="tab" aria-selected="true" aria-controls="menu-content" data-category="all" tabindex="0" aria-label="Todos">
+                            <span class="pill-icon" aria-hidden="true">📋</span>
+                            <span class="pill-label">Todos</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="entrantes-raciones" tabindex="-1" aria-label="Entrantes / Raciones">
+                            <span class="pill-icon" aria-hidden="true">🍽️</span>
+                            <span class="pill-label">Entrantes / Raciones</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="ensaladas" tabindex="-1" aria-label="Ensaladas">
+                            <span class="pill-icon" aria-hidden="true">🥗</span>
+                            <span class="pill-label">Ensaladas</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="burritos-wraps" tabindex="-1" aria-label="Burritos y Wraps">
+                            <span class="pill-icon" aria-hidden="true">🌯</span>
+                            <span class="pill-label">Burritos y Wraps</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="sandwich" tabindex="-1" aria-label="Sándwich">
+                            <span class="pill-icon" aria-hidden="true">🥪</span>
+                            <span class="pill-label">Sándwich</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="hamburguesas" tabindex="-1" aria-label="Hamburguesas">
+                            <span class="pill-icon" aria-hidden="true">🍔</span>
+                            <span class="pill-label">Hamburguesas</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="bocadillos" tabindex="-1" aria-label="Bocadillos">
+                            <span class="pill-icon" aria-hidden="true">🥖</span>
+                            <span class="pill-label">Bocadillos</span>
+                        </button>
+                        <button class="pill" role="tab" aria-selected="false" aria-controls="menu-content" data-category="platos-combinados" tabindex="-1" aria-label="Platos Combinados">
+                            <span class="pill-icon" aria-hidden="true">🍱</span>
+                            <span class="pill-label">Platos Combinados</span>
+                        </button>
+                        <button class="pill pill-brasil" role="tab" aria-selected="false" aria-controls="menu-content" data-category="brasil" tabindex="-1">
+                            <span class="pill-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="18" height="18" focusable="false">
+                                    <path fill="#128807" d="M64 43c0 6.075-3.373 11-10 11H10C3.373 54 0 49.075 0 43V21c0-6.075 3.373-11 10-11h44c6.627 0 10 4.925 10 11v22"/>
+                                    <path fill="#f9cb38" d="M57.14 32.79L32.15 50.35L7.159 32.79L32.15 15.23z"/>
+                                    <g fill-rule="evenodd">
+                                        <path fill="#002776" d="M42.01 35.848c-1.138 3.867-4.699 6.811-8.731 7.211c-5.387.539-10.1-2.885-11.246-8.178a9.844 9.844 0 0 1 -.126-4.705c.157-.17.374-.211.59-.241a25.238 25.238 0 0 1 4.757-.207c1.695.096 3.376.331 5.01.793c1.677.475 3.301 1.095 4.834 1.919a24.12 24.12 0 0 1 3.295 2.11c.352.273.711.541 1.049.832c.151.13.269.27.315.466"/>
+                                        <path fill="#002776" d="M22.724 28.611c1.291-2.885 3.468-4.806 6.477-5.708c6.06-1.817 12.277 2.188 13.178 8.434c.14.965.146 1.933-.002 2.9c-.153.057-.267-.024-.372-.111a25.29 25.29 0 0 0-3.503-2.402a23.002 23.002 0 0 0-2.952-1.408c-.18-.071-.406-.108-.468-.349c.065-.116.147-.217.245-.311c.035-.036.086-.071.039-.131c-.016-.019-.049-.019-.077-.016c-.075.008-.065.06-.062.115c.006.179-.098.294-.235.386c-.243.055-.476-.018-.673-.123c-.564-.296-1.188-.397-1.785-.562c-.931-.253-1.887-.396-2.841-.545a25.83 25.83 0 0 0-2.297-.262c-.7-.049-1.413-.042-2.118.006c-.769.054-1.54.108-2.305.2a.253.253 0 0 1-.249-.113"/>
+                                        <path fill="#fefefe" d="M35.09 29.905c-.004.122.105.106.171.132a25.51 25.51 0 0 1 7.11 4.2a7.544 7.544 0 0 1 -.362 1.611c-1.251-1.038-2.532-2.027-3.949-2.835c-4.479-2.551-9.275-3.562-14.402-3.02c-.5.051-1 .119-1.5.18c.129-.541.293-1.072.562-1.564c3.743-.505 7.421-.218 11.03.899c.448.139.875.363 1.353.405l-.013-.011"/>
+                                    </g>
+                                </svg>
+                            </span>
+                            <span class="pill-label">Platos Brasileños</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid de Cards -->
+                <div class="menu-grid" id="menu-content" role="tabpanel" aria-labelledby="menu-heading">
+
+                    <!-- Entrantes / Raciones -->
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Patatas bravas" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Patatas bravas</h3>
+                            <span class="price">6,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Fingers de pollo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Fingers de pollo</h3>
+                            <span class="price">8,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Chorizo frito" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Chorizo frito</h3>
+                            <span class="price">9,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Callos caseros" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Callos caseros</h3>
+                            <span class="price">10,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Torrezno" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Torrezno</h3>
+                            <span class="price">6,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="entrantes-raciones">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Alitas de pollo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Alitas de pollo</h3>
+                            <span class="price">8,50€</span>
+                        </div>
+                    </article>
+
+                    <!-- Ensaladas -->
+                    <article class="menu-card" data-category="ensaladas">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Ensalada Mixta" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada Mixta</h3>
+                            <p>Lechuga, tomate, maíz, cebolla, espárragos y atún</p>
+                            <span class="price">7,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="ensaladas">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Ensalada Kaixo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Ensalada Kaixo</h3>
+                            <p>Lechuga, tomate, piña, aceitunas negras, zanahoria, nueces y salsa agridulce</p>
+                            <span class="price">8,00€</span>
+                        </div>
+                    </article>
+
+                    <!-- Burritos y Wraps -->
+                    <article class="menu-card" data-category="burritos-wraps">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Burrito de carne" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Burrito de carne</h3>
+                            <p>Carne mechada, bacón, queso, plátano maduro, lechuga y tomate</p>
+                            <span class="price">9,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="burritos-wraps">
+                        <div class="card-image">
+                            <img src="assets/wrap_pollo.jpg" alt="Wrap de pollo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Wrap de pollo</h3>
+                            <p>Pollo crujiente, bacón, lechuga, tomate y salsa de yogur</p>
+                            <span class="price">9,00€</span>
+                        </div>
+                    </article>
+
+                    <!-- Sándwich -->
+                    <article class="menu-card" data-category="sandwich">
+                        <div class="card-image">
+                            <img src="assets/sandwich_vegetal.jpg" alt="Sándwich Vegetal" loading="lazy" onerror="this.onerror=null;this.src='assets/card2.jpg';">
+                        </div>
+                        <div class="card-content">
+                            <h3>Sándwich Vegetal</h3>
+                            <p>Atún con mayonesa, huevo duro, jamón, queso, lechuga y tomate</p>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="sandwich">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Sándwich Mixto" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Sándwich Mixto</h3>
+                            <p>Jamón y queso</p>
+                            <span class="price">4,50€</span>
+                        </div>
+                    </article>
+
+                    <!-- Hamburguesas -->
+                    <article class="menu-card" data-category="hamburguesas">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Hamburguesa Simple" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Hamburguesa Simple</h3>
+                            <p>Carne vacuno 200 g, bacón, queso, lechuga, tomate y cebolla caramelizada</p>
+                            <span class="price">11,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="hamburguesas">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Hamburguesa Kaixo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Hamburguesa Kaixo</h3>
+                            <p>Carne vacuno 200 g, carne mechada, bacón, queso, plátano maduro, lechuga y tomate</p>
+                            <span class="price">13,50€</span>
+                        </div>
+                    </article>
+
+                    <!-- Bocadillos -->
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Bocadillo de pechuga y queso" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Pechuga y queso</h3>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Bocadillo de pechuga, queso y pimientos" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Pechuga, queso y pimientos</h3>
+                            <span class="price">7,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Bocadillo de lomo y queso" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Lomo y queso</h3>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Bocadillo de lomo, queso y pimientos" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Lomo, queso y pimientos</h3>
+                            <span class="price">7,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Bocadillo de bacón y queso" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Bacón y queso</h3>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Bocadillo de bacón, queso y pimientos" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Bacón, queso y pimientos</h3>
+                            <span class="price">7,00€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Bocadillo vegetal de atún" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Vegetal atún</h3>
+                            <span class="price">7,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Bocadillo vegetal de pechuga" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Vegetal pechuga</h3>
+                            <span class="price">7,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Bocadillo de tortilla de chorizo" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Tortilla de chorizo</h3>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="bocadillos">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Bocadillo de tortilla de jamón" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Tortilla de jamón</h3>
+                            <span class="price">6,50€</span>
+                        </div>
+                    </article>
+
+                    <!-- Platos Combinados -->
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Pechuga de pollo - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Pechuga de pollo</h3>
+                            <p>Servido con patatas, huevo, lechuga y tomate</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Lomo - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Lomo</h3>
+                            <p>Servido con patatas, huevo, lechuga y tomate</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Chorizo - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Chorizo</h3>
+                            <p>Servido con patatas, huevo, lechuga y tomate</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card1.jpg" alt="Panceta - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Panceta</h3>
+                            <p>Con patatas y huevo</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card2.jpg" alt="Escalope de pollo - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Escalope de pollo</h3>
+                            <p>Con patatas, huevo y pimientos</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <article class="menu-card" data-category="platos-combinados">
+                        <div class="card-image">
+                            <img src="assets/card3.jpg" alt="Escalope de carne - plato combinado" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h3>Escalope de carne</h3>
+                            <p>Con patatas, huevo y pimientos</p>
+                            <span class="price">10,50€</span>
+                        </div>
+                    </article>
+
+                    <!-- Platos Brasileños (por encargo) -->
+                    <article class="menu-card" data-category="brasil">
+                        <div class="card-image">
+                            <img src="assets/feijoada.jpg" alt="Feijoada brasileña de alubias negras con guarniciones (arroz, farofa y vinagreta)" loading="lazy">
+                            <span class="badge badge-encargo" aria-label="Plato por encargo">Por encargo</span>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="dish-with-icon">
+                                <span class="pill-icon" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="18" height="18" focusable="false">
+                                        <path fill="#128807" d="M64 43c0 6.075-3.373 11-10 11H10C3.373 54 0 49.075 0 43V21c0-6.075 3.373-11 10-11h44c6.627 0 10 4.925 10 11v22"/>
+                                        <path fill="#f9cb38" d="M57.14 32.79L32.15 50.35L7.159 32.79L32.15 15.23z"/>
+                                        <g fill-rule="evenodd">
+                                            <path fill="#002776" d="M42.01 35.848c-1.138 3.867-4.699 6.811-8.731 7.211c-5.387.539-10.1-2.885-11.246-8.178a9.844 9.844 0 0 1 -.126-4.705c.157-.17.374-.211.59-.241a25.238 25.238 0 0 1 4.757-.207c1.695.096 3.376.331 5.01.793c1.677.475 3.301 1.095 4.834 1.919a24.12 24.12 0 0 1 3.295 2.11c.352.273.711.541 1.049.832c.151.13.269.27.315.466"/>
+                                            <path fill="#002776" d="M22.724 28.611c1.291-2.885 3.468-4.806 6.477-5.708c6.06-1.817 12.277 2.188 13.178 8.434c.14.965.146 1.933-.002 2.9c-.153.057-.267-.024-.372-.111a25.29 25.29 0 0 0-3.503-2.402a23.002 23.002 0 0 0-2.952-1.408c-.18-.071-.406-.108-.468-.349c.065-.116.147-.217.245-.311c.035-.036.086-.071.039-.131c-.016-.019-.049-.019-.077-.016c-.075.008-.065.06-.062.115c.006.179-.098.294-.235.386c-.243.055-.476-.018-.673-.123c-.564-.296-1.188-.397-1.785-.562c-.931-.253-1.887-.396-2.841-.545a25.83 25.83 0 0 0-2.297-.262c-.7-.049-1.413-.042-2.118.006c-.769.054-1.54.108-2.305.2a.253.253 0 0 1-.249-.113"/>
+                                            <path fill="#fefefe" d="M35.09 29.905c-.004.122.105.106.171.132a25.51 25.51 0 0 1 7.11 4.2a7.544 7.544 0 0 1 -.362 1.611c-1.251-1.038-2.532-2.027-3.949-2.835c-4.479-2.551-9.275-3.562-14.402-3.02c-.5.051-1 .119-1.5.18c.129-.541.293-1.072.562-1.564c3.743-.505 7.421-.218 11.03.899c.448.139.875.363 1.353.405l-.013-.011"/>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span>Feijoada</span>
+                            </h3>
+                            <p><strong>Platos especiales por encargo</strong></p>
+                            <p>Guiso brasileño de alubias negras con varios cortes de cerdo y embutidos, cocinado a fuego lento, acompañados de arroz, farofa y vinagreta.</p>
+                            <span class="price">16€/30€</span>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sección de Contacto -->
+    <section class="contact-section" id="contacto">
+        <div class="container">
+            <h2>Visítanos</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Horarios</h3>
+                    <p><strong>Lunes:</strong> Cerrado</p>
+                    <p><strong>Martes:</strong> 10:00–23:00</p>
+                    <p><strong>Miércoles:</strong> 10:00–23:00</p>
+                    <p><strong>Jueves:</strong> 10:00–23:00</p>
+                    <p><strong>Viernes:</strong> 10:00–2:00</p>
+                    <p><strong>Sábado:</strong> 10:00–2:00</p>
+                    <p><strong>Domingo:</strong> 10:00–23:00</p>
+                    
+                    <h3>Contacto</h3>
+                    <p><strong>Teléfono:</strong> 943 09 76 21</p>
+                    <p><strong>Dirección:</strong> Zurradero Kalea, 4<br>20570 Bergara, Gipuzkoa</p>
+                </div>
+                <div class="contact-map">
+                    <div class="map-embed">
+                        <iframe
+                            title="Ubicación de Bar Kaixo en Bergara: Zurradero Kalea, 4, 20570"
+                            src="https://www.google.com/maps?q=Zurradero%20Kalea%2C%204%2C%2020570%20Bergara%2C%20Gipuzkoa&output=embed"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <p class="map-caption">Zurradero Kalea, 4, 20570 Bergara, Gipuzkoa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Reserva -->
+    <div class="modal-overlay" id="reserva-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Reservar Mesa</h2>
+                <button class="modal-close" aria-label="Cerrar modal de reserva">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="reservation-form" id="reservation-form" novalidate>
+                <div class="form-group">
+                    <label for="name">Nombre completo *</label>
+                    <input type="text" id="name" name="name" required aria-describedby="name-error">
+                    <span class="error-message" id="name-error" role="alert"></span>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Fecha *</label>
+                        <input type="date" id="date" name="date" required aria-describedby="date-error">
+                        <span class="error-message" id="date-error" role="alert"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Hora *</label>
+                        <select id="time" name="time" required aria-describedby="time-error">
+                            <option value="">Seleccionar hora</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:30">13:30</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:30">20:30</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:30">21:30</option>
+                            <option value="22:00">22:00</option>
+                        </select>
+                        <span class="error-message" id="time-error" role="alert"></span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="guests">Número de personas *</label>
+                        <select id="guests" name="guests" required aria-describedby="guests-error">
+                            <option value="">Seleccionar</option>
+                            <option value="1">1 persona</option>
+                            <option value="2">2 personas</option>
+                            <option value="3">3 personas</option>
+                            <option value="4">4 personas</option>
+                            <option value="5">5 personas</option>
+                            <option value="6">6 personas</option>
+                            <option value="7">7 personas</option>
+                            <option value="8">8 personas</option>
+                        </select>
+                        <span class="error-message" id="guests-error" role="alert"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Teléfono *</label>
+                        <input type="tel" id="phone" name="phone" required aria-describedby="phone-error" placeholder="600 123 456">
+                        <span class="error-message" id="phone-error" role="alert"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Comentarios adicionales</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Alergias, preferencias especiales, celebraciones..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-reservation">Cancelar</button>
+                    <button type="submit" class="btn-primary">Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
