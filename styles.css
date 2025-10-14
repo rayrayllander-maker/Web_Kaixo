@@ -564,6 +564,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  position: relative; /* necesario para tooltip */
 }
 
 .pill:hover {
@@ -615,6 +616,55 @@ body {
   display: block;
 }
 
+/* ===== Tooltips accesibles para pills ===== */
+.pill:focus-visible::after,
+.pill:focus-visible::before {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (hover: hover) {
+  .pill:hover::after,
+  .pill:hover::before {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.pill::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(6px);
+  background: var(--text-dark);
+  color: var(--text-light);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.pill::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%) translateY(6px);
+  border: 6px solid transparent;
+  border-top-color: var(--text-dark);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
 /* PC / Desktop: volver a estilo anterior (texto visible, sin scroll horizontal) */
 @media (min-width: 700px) {
   .category-pills {
@@ -644,6 +694,8 @@ body {
     min-width: 60px;
     padding: 0 1rem;
   }
+  /* Solo iconos en mobile */
+  .pill .pill-label { display: none; }
   .pill .pill-icon { font-size: 30px; }
   .pill-icon svg { width: 30px; height: 30px; }
 }
@@ -1220,6 +1272,8 @@ body {
     height: 36px;
     padding: 0 0.75rem;
   }
+  /* Reafirmar: solo iconos también en móviles muy pequeños */
+  .pill .pill-label { display: none; }
   
   .card-content {
     padding: 1rem;
