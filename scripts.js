@@ -850,6 +850,7 @@
         if (!overlay) return;
 
         const progressEl = document.getElementById('loader-progress');
+        const barFill = document.getElementById('loader-progress-bar-fill');
 
         // Selección de variante visual: spinner (por defecto), bars, ripple, orbit
         const visual = overlay.querySelector('.loader-visual');
@@ -867,57 +868,114 @@
             visual.classList.add(chosen);
         }
 
-        // Reunir todas las URLs de imágenes únicas presentes en el DOM (src y data-src)
-        const domImgs = Array.from(document.querySelectorAll('img'));
-        const urls = new Set();
-        domImgs.forEach(img => {
-            const src = img.getAttribute('src');
-            const dataSrc = img.getAttribute('data-src');
-            if (src) urls.add(src);
-            if (dataSrc) urls.add(dataSrc);
+        // Recolectar imágenes y dividir en fases: críticas (hero + logo + primeras categorías visibles) y resto
+        const allImgs = Array.from(document.querySelectorAll('img'));
+        const criticalSelectors = [
+            '.hero-image img',
+            '.hero-logo',
+            '.nav-logo',
+            '.menu-grid .menu-card:nth-of-type(-n+4) img' // primeras 4 cards para evitar salto visual
+        ];
+        const criticalSet = new Set();
+        criticalSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(img => criticalSet.add(img));
         });
 
-        const imgUrls = Array.from(urls);
-        if (imgUrls.length === 0) {
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.remove(), 250);
-            return;
-        }
+        const critical = Array.from(criticalSet);
+        const nonCritical = allImgs.filter(img => !criticalSet.has(img));
 
-        let loaded = 0;
-        const total = imgUrls.length;
-        const update = () => {
-            loaded++;
-            const pct = Math.min(100, Math.round((loaded / total) * 100));
+        // Crear lista de URLs únicas por fase
+        const unique = list => Array.from(new Set(list.map(i => i.getAttribute('src') || i.getAttribute('data-src')).filter(Boolean)));
+        const criticalUrls = unique(critical);
+        const nonCriticalUrls = unique(nonCritical);
+
+        // Métricas de progreso: 80% para críticas, 20% para resto (visual)
+        const totalVisualWeight = 100;
+        const criticalWeight = 80;
+        const nonCriticalWeight = 20;
+        let criticalLoaded = 0;
+        let nonCriticalLoaded = 0;
+
+        const updateProgress = () => {
+            const critPct = criticalUrls.length ? (criticalLoaded / criticalUrls.length) : 1;
+            const nonCritPct = nonCriticalUrls.length ? (nonCriticalLoaded / nonCriticalUrls.length) : 1;
+            const weighted = Math.min(1, (critPct * criticalWeight + nonCritPct * nonCriticalWeight) / totalVisualWeight);
+            const pct = Math.round(weighted * 100);
             if (progressEl) progressEl.textContent = pct + '%';
-            if (loaded >= total) {
-                overlay.classList.add('hidden');
-                setTimeout(() => overlay.remove(), 300);
+            if (barFill) barFill.style.width = pct + '%';
+            if (pct >= 100) {
+                // Pequeño delay para suavidad
+                requestAnimationFrame(() => {
+                    overlay.classList.add('hidden');
+                    setTimeout(() => overlay.remove(), 400);
+                });
             }
         };
 
-        // Disparar precarga creando objetos Image por URL única
-        imgUrls.forEach(url => {
+        if (criticalUrls.length === 0) {
+            // Nada crítico, cerrar rápido y cargar resto en idle
+            overlay.classList.add('hidden');
+            setTimeout(() => overlay.remove(), 300);
+            deferNonCritical(nonCriticalUrls);
+            return;
+        }
+
+        // Cargar fase crítica
+        criticalUrls.forEach(url => {
             const img = new Image();
-            img.onload = update;
-            img.onerror = update;
+            img.onload = () => { criticalLoaded++; updateProgress(); };
+            img.onerror = () => { criticalLoaded++; updateProgress(); };
             img.src = url;
         });
 
-        // Además, enganchar imágenes del DOM que aún no hayan empezado a cargar (por si lazy)
-        domImgs.forEach(img => {
-            if (!img.complete && img.dataset && img.dataset.src && !img.getAttribute('src')) {
-                img.src = img.dataset.src;
-            }
-        });
+        // Lanzar carga diferida del resto cuando termine la fase crítica o a los 1.5s lo que ocurra antes
+        let nonCriticalStarted = false;
+        const startNonCritical = () => {
+            if (nonCriticalStarted) return; nonCriticalStarted = true;
+            nonCriticalUrls.forEach(url => {
+                const img = new Image();
+                img.onload = () => { nonCriticalLoaded++; updateProgress(); };
+                img.onerror = () => { nonCriticalLoaded++; updateProgress(); };
+                img.src = url;
+            });
+        };
 
-        // Fallback de tiempo máximo
+        const criticalCheckInterval = setInterval(() => {
+            if (criticalLoaded >= criticalUrls.length) {
+                clearInterval(criticalCheckInterval);
+                startNonCritical();
+            }
+        }, 60);
+        setTimeout(startNonCritical, 1500);
+
+        // Fallback tiempo máximo (en caso de bloqueos de red)
         setTimeout(() => {
+            updateProgress();
             if (!overlay.classList.contains('hidden')) {
                 overlay.classList.add('hidden');
                 setTimeout(() => overlay.remove(), 300);
             }
-        }, 8000);
+        }, 9000);
+
+        // Asegurar que imágenes lazy tengan src pronto
+        allImgs.forEach(img => {
+            if (!img.getAttribute('src') && img.dataset && img.dataset.src) {
+                img.src = img.dataset.src;
+            }
+        });
+
+        // Carga en idle para recursos no listados (ej futuros) - utilitario básico
+        function deferNonCritical(extraUrls) {
+            if (!extraUrls || !extraUrls.length) return;
+            const loader = () => {
+                extraUrls.forEach(url => { const i = new Image(); i.src = url; });
+            };
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(loader, { timeout: 2000 });
+            } else {
+                setTimeout(loader, 1200);
+            }
+        }
     }
 
     // ===== EXPONER API PÚBLICA =====
