@@ -52,6 +52,10 @@
         init() {
             this.bindEvents();
             this.setupKeyboardNavigation();
+            // Asegurar que todo está visible al iniciar (sin filtrado)
+            this.resetVisibility();
+            // Debounce para evitar múltiples activaciones rápidas al hacer clic (más ágil)
+            this.debouncedSelect = Utils.debounce((pill) => this.selectPill(pill), 80);
         }
 
         bindEvents() {
@@ -94,6 +98,7 @@
                 case 'Enter':
                 case ' ':
                     event.preventDefault();
+                    if (this.isAnimating) return;
                     this.selectPill(elements.categoryPills[currentIndex]);
                     return;
                 default:
@@ -114,26 +119,26 @@
 
         handlePillClick(event) {
             event.preventDefault();
+            if (this.isAnimating) return;
             // Usar currentTarget para que funcione al pulsar icono o texto dentro del botón
-            this.selectPill(event.currentTarget);
+            this.debouncedSelect(event.currentTarget);
         }
 
         selectPill(pill) {
-            if (this.isAnimating) return;
+            if (this.isAnimating) return; // guard adicional por seguridad
+            this.isAnimating = true;
 
             const category = pill.dataset.category;
-            if (category === this.currentCategory) return;
-
             this.updateActiveState(pill);
-            this.filterCards(category);
             this.currentCategory = category;
 
-            // Anunciar cambio para lectores de pantalla
-            this.announceFilterChange(category);
+            // Nos aseguramos de que no haya ocultaciones previas
+            this.resetVisibility();
 
-            // Desplazar la vista para centrar la sección seleccionada
-            // Pequeño retraso para no interferir con la animación de filtrado
-            setTimeout(() => this.scrollToCategoryView(), 200);
+            // Anuncio accesible y desplazamiento suave hacia la categoría
+            this.announceFilterChange(category);
+            // Iniciar scroll; el fin de animación liberará isAnimating
+            this.scrollToCategory(category);
         }
 
         updateActiveState(activePill) {
@@ -145,39 +150,10 @@
             });
         }
 
+        // El nuevo comportamiento no filtra: mantiene todo visible
+        // Método conservado por compatibilidad, ahora solo asegura visibilidad
         filterCards(category) {
-            this.isAnimating = true;
-
-            // Fade out todas las cards
-            elements.menuCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-            });
-
-            setTimeout(() => {
-                // Mostrar/ocultar cards según categoría
-                elements.menuCards.forEach(card => {
-                    const cardCategory = card.dataset.category;
-                    const shouldShow = category === 'all' || cardCategory === category;
-                    
-                    if (shouldShow) {
-                        card.classList.remove(CONFIG.HIDDEN_CLASS);
-                        card.classList.add(CONFIG.FADE_CLASS);
-                        // Fade in con delay escalonado
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, Math.random() * 100);
-                    } else {
-                        card.classList.add(CONFIG.HIDDEN_CLASS);
-                        card.classList.remove(CONFIG.FADE_CLASS);
-                    }
-                });
-
-                setTimeout(() => {
-                    this.isAnimating = false;
-                }, CONFIG.ANIMATION_DURATION);
-            }, 150);
+            this.resetVisibility();
         }
 
         announceFilterChange(category) {
@@ -193,7 +169,9 @@
                 'brasil': 'Platos Brasileños'
             };
 
-            const announcement = `Mostrando ${categoryNames[category] || category}`;
+            const announcement = category === 'all'
+                ? 'Desplazando al inicio del menú'
+                : `Desplazando a la categoría ${categoryNames[category] || category}`;
             
             // Crear elemento temporal para anuncio
             const announcer = document.createElement('div');
@@ -206,31 +184,91 @@
             setTimeout(() => document.body.removeChild(announcer), 1000);
         }
 
-        // Centra en pantalla la primera card visible de la categoría seleccionada (o la parrilla)
-        scrollToCategoryView() {
+        // Desplaza suavemente al encabezado de la categoría seleccionada (o al inicio del grid)
+        scrollToCategory(category) {
             const grid = elements.menuGrid;
             if (!grid) return;
 
-            const visibleCard = Array.from(grid.querySelectorAll('.menu-card'))
-                .find(card => !card.classList.contains(CONFIG.HIDDEN_CLASS));
-
-            const target = visibleCard || grid;
-            const rect = target.getBoundingClientRect();
-
-            // Calcular posición para centrar el objetivo en viewport
-            const targetTop = rect.top + window.scrollY;
-            const centerOffset = Math.max(0, (window.innerHeight / 2) - (target.offsetHeight / 2));
-            let top = targetTop - centerOffset;
-
-            // Ajuste ligero si hay navbar fija muy alta (evitar solape en la parte superior)
-            const nav = document.querySelector('.navbar');
-            if (nav) {
-                const navH = nav.offsetHeight || 0;
-                // Si el centro calculado queda por encima de la navbar, compénsalo levemente
-                top = Math.max(0, top - Math.min(20, navH / 4));
+            let target;
+            if (category === 'all') {
+                target = grid;
+            } else {
+                target = document.querySelector(`.menu-category[data-category="${category}"]`) 
+                      || grid.querySelector(`.menu-card[data-category="${category}"]`) 
+                      || grid;
             }
 
-            window.scrollTo({ top, behavior: 'smooth' });
+            const navbar = document.querySelector('.navbar');
+            const pills = document.querySelector('.category-pills-container');
+
+            // Predicción de offset (funciona bien en el primer clic)
+            const navH = navbar ? navbar.offsetHeight : 0;
+            const pillsH = pills ? pills.offsetHeight : 0;
+            const expectedOffset = navH + pillsH; // sin margen extra
+
+            // Efecto de realce temporal en el separador de categoría
+            const categoryHeader = target?.classList?.contains('menu-category') ? target : null;
+            if (categoryHeader) {
+                // Limpiar realces previos
+                document.querySelectorAll('.menu-category.is-highlighted').forEach(el => el.classList.remove('is-highlighted'));
+                // Aplicar y retirar tras un tiempo
+                categoryHeader.classList.add('is-highlighted');
+                setTimeout(() => categoryHeader.classList.remove('is-highlighted'), 1200);
+            }
+
+            // Calcular posición absoluta del objetivo (usando el título h3 si existe)
+            const anchorEl = (target && target.classList && target.classList.contains('menu-category'))
+                ? (target.querySelector('h3') || target)
+                : target;
+            const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // Generadores de offset dinámico y destino (evitan atascos cuando las pills cambian de estado)
+            const getOffset = () => Math.max(
+                navbar ? navbar.getBoundingClientRect().bottom : 0,
+                pills ? pills.getBoundingClientRect().bottom : 0
+            );
+            const getTargetY = () => (anchorEl.getBoundingClientRect().top + window.scrollY) - getOffset();
+
+            if (prefersReduced) {
+                window.scrollTo({ top: Math.max(0, getTargetY()), behavior: 'auto' });
+                this.isAnimating = false;
+                return;
+            }
+
+            // Cancelar animación previa si existía
+            if (this._cancelScroll) {
+                this._cancelScroll();
+                this._cancelScroll = null;
+            }
+
+            // Duración proporcional a la distancia para suavidad sin tirones
+            const initialTarget = Math.max(0, getTargetY());
+            const distance = Math.abs(window.scrollY - initialTarget);
+            // Si la distancia es pequeña, salto instantáneo
+            if (distance < 120) {
+                window.scrollTo({ top: initialTarget, behavior: 'auto' });
+                this.isAnimating = false;
+                return;
+            }
+            const duration = Math.min(480, Math.max(180, distance * 0.24));
+
+            this._cancelScroll = Utils.animateScrollTo(getTargetY, duration, () => {
+                this._cancelScroll = null;
+                this.isAnimating = false;
+            });
+        }
+
+        // Quita cualquier ocultación/estilo transitorio y muestra todo
+        resetVisibility() {
+            elements.menuCards.forEach(card => {
+                card.classList.remove(CONFIG.HIDDEN_CLASS);
+                card.style.opacity = '';
+                card.style.transform = '';
+            });
+
+            document.querySelectorAll('.menu-category').forEach(sep => {
+                sep.style.display = '';
+            });
         }
     }
 
@@ -571,6 +609,48 @@
                 behavior: 'smooth'
             });
         }
+
+        // Animación de scroll con rAF y easing; acepta un destino dinámico (función) para recalcular offset
+        static animateScrollTo(getTargetY, duration = 600, onEnd) {
+            const startY = window.scrollY;
+            const startTime = performance.now();
+            // Easing más fluido y rápido al inicio: ease-out quint
+            const ease = t => 1 - Math.pow(1 - t, 3); // ease-out cubic para un final más suave
+            let rafId = null;
+            let lastY = startY;
+            // Filtrado suave del objetivo para evitar saltos si cambia el offset sticky
+            let smoothedTargetY = Math.max(0, typeof getTargetY === 'function' ? getTargetY() : getTargetY);
+
+            const step = (now) => {
+                const elapsed = Math.min(1, (now - startTime) / duration);
+                const eased = ease(elapsed);
+                const desired = Math.max(0, typeof getTargetY === 'function' ? getTargetY() : getTargetY);
+                // LERP del objetivo para suavizar cambios bruscos de offset
+                smoothedTargetY += (desired - smoothedTargetY) * 0.35;
+                const targetY = smoothedTargetY;
+                const nextY = startY + (targetY - startY) * eased;
+                // Evitar micro-oscilaciones por 1px
+                if (Math.abs(nextY - lastY) > 0.5) {
+                    window.scrollTo(0, nextY);
+                    lastY = nextY;
+                }
+                if (elapsed < 1) {
+                    rafId = requestAnimationFrame(step);
+                } else {
+                    // Ajuste final a objetivo exacto
+                    // Ajuste final al objetivo deseado actual
+                    window.scrollTo(0, Math.max(0, typeof getTargetY === 'function' ? getTargetY() : getTargetY));
+                    onEnd && onEnd();
+                }
+            };
+
+            rafId = requestAnimationFrame(step);
+            // Retornar cancelador
+            return () => {
+                if (rafId) cancelAnimationFrame(rafId);
+                onEnd && onEnd();
+            };
+        }
     }
 
     // ===== MEJORAS DE NAVEGACIÓN =====
@@ -622,7 +702,7 @@
                         }
                     }
                 });
-            }, 100));
+            }, 100), { passive: true });
         }
     }
 
@@ -636,8 +716,8 @@
             pillsContainer.classList.toggle('stuck', stuck);
         }, 50);
 
-        window.addEventListener('scroll', onScroll);
-        window.addEventListener('resize', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
         // estado inicial
         onScroll();
     };
@@ -653,8 +733,8 @@
             navbar.classList.toggle('collapsed', shouldCollapse);
         }, 50);
 
-        window.addEventListener('scroll', onScroll);
-        window.addEventListener('resize', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
         onScroll();
     };
 
@@ -667,6 +747,15 @@
         }
 
         try {
+            // Optimizaciones ligeras de imagen
+            try {
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+                });
+                const heroImg = document.querySelector('.hero-image img');
+                if (heroImg) heroImg.setAttribute('fetchpriority', 'high');
+            } catch (_) {}
+
             // Inicializar componentes
             new CategoryFilter();
             new ReservationModal();

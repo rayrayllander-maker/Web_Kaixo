@@ -44,7 +44,6 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -102,7 +101,7 @@ body {
   margin: 0 auto;
   padding: 0 var(--container-padding);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative; /* necesario para centrar el logo absoluto */
 }
@@ -654,6 +653,37 @@ body {
   display: grid;
   gap: 28px;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+/* Separadores de categoría dentro de la grid */
+.menu-category {
+  grid-column: 1 / -1; /* ocupar todo el ancho */
+  margin-top: 0.5rem;
+}
+
+.menu-category h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0.5rem 0 0.25rem;
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(156, 222, 159, 0.25);
+  border: 1px solid rgba(4, 119, 59, 0.25);
+  box-shadow: 0 4px 12px rgba(4, 119, 59, 0.06);
+  transition: all var(--transition);
+}
+
+/* Realce temporal al llegar por scroll programático */
+.menu-category.is-highlighted h3 {
+  background: rgba(156, 222, 159, 0.55);
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(4, 119, 59, 0.12), 0 10px 28px rgba(4, 119, 59, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-category h3 { transition: none; }
 }
 
 .menu-card {

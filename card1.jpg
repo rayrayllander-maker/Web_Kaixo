@@ -1,0 +1,65 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo del plato -->
+  <defs>
+    <radialGradient id="plateGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#F8F8F8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0E0E0;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="foodGradient" cx="30%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#DEB887;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B7355;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Fondo de mesa de madera -->
+  <rect width="800" height="600" fill="#8B4513"/>
+  <rect width="800" height="600" fill="url(#woodTexture)" opacity="0.3"/>
+  
+  <!-- Sombra del plato -->
+  <ellipse cx="400" cy="320" rx="180" ry="160" fill="#000000" opacity="0.1"/>
+  
+  <!-- Plato principal -->
+  <ellipse cx="400" cy="300" rx="170" ry="150" fill="url(#plateGradient)" stroke="#D0D0D0" stroke-width="2"/>
+  
+  <!-- Pintxos variados - Representación estilizada -->
+  
+  <!-- Pintxo 1: Base de pan -->
+  <ellipse cx="320" cy="280" rx="25" ry="15" fill="#DEB887"/>
+  <ellipse cx="320" cy="275" rx="20" ry="8" fill="#F4A460"/>
+  
+  <!-- Pintxo 2: Con jamón -->
+  <ellipse cx="400" cy="260" rx="28" ry="18" fill="#DEB887"/>
+  <path d="M385 250 Q400 245 415 250 Q410 265 400 270 Q390 265 385 250" fill="#8B0000"/>
+  
+  <!-- Pintxo 3: Con queso -->
+  <ellipse cx="480" cy="280" rx="25" ry="15" fill="#DEB887"/>
+  <rect x="465" y="270" width="30" height="8" rx="4" fill="#FFFF99"/>
+  
+  <!-- Pintxo 4: Con anchoa -->
+  <ellipse cx="360" cy="320" rx="22" ry="12" fill="#DEB887"/>
+  <path d="M350 315 Q360 310 370 315 Q365 322 360 325 Q355 322 350 315" fill="#C0C0C0"/>
+  
+  <!-- Pintxo 5: Mixto -->
+  <ellipse cx="440" cy="320" rx="26" ry="16" fill="#DEB887"/>
+  <circle cx="440" cy="315" r="8" fill="#228B22"/>
+  <circle cx="448" cy="318" r="4" fill="#FF6347"/>
+  
+  <!-- Detalles decorativos -->
+  <circle cx="350" cy="350" r="3" fill="#228B22" opacity="0.7"/>
+  <circle cx="450" cy="350" r="3" fill="#FF6347" opacity="0.7"/>
+  <circle cx="400" cy="340" r="2" fill="#FFD700" opacity="0.8"/>
+  
+  <!-- Reflejo en el plato -->
+  <ellipse cx="380" cy="270" rx="60" ry="40" fill="#FFFFFF" opacity="0.2"/>
+  
+  <!-- Texto informativo -->
+  <text x="400" y="480" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#654321">
+    PINTXOS VARIADOS
+  </text>
+  <text x="400" y="510" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#8B4513">
+    Card Image Placeholder - 800x600px
+  </text>
+</svg>

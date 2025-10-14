@@ -1,0 +1,59 @@
+<svg width="1920" height="600" viewBox="0 0 1920 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo degradado que simula ambiente de restaurante -->
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#D2691E;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#A0522D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Patrón de textura para simular madera -->
+    <pattern id="woodTexture" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#8B4513"/>
+      <rect x="0" y="0" width="20" height="2" fill="#A0522D" opacity="0.3"/>
+      <rect x="0" y="5" width="20" height="1" fill="#654321" opacity="0.5"/>
+      <rect x="0" y="10" width="20" height="2" fill="#A0522D" opacity="0.3"/>
+      <rect x="0" y="15" width="20" height="1" fill="#654321" opacity="0.5"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fondo base -->
+  <rect width="1920" height="600" fill="url(#heroGradient)"/>
+  
+  <!-- Textura de madera sutil -->
+  <rect width="1920" height="600" fill="url(#woodTexture)" opacity="0.15"/>
+  
+  <!-- Elementos decorativos que simulan un interior de bar vasco -->
+  
+  <!-- Barras verticales simulando vigas de madera -->
+  <rect x="200" y="0" width="8" height="600" fill="#654321" opacity="0.4"/>
+  <rect x="500" y="0" width="6" height="600" fill="#654321" opacity="0.3"/>
+  <rect x="800" y="0" width="8" height="600" fill="#654321" opacity="0.4"/>
+  <rect x="1200" y="0" width="6" height="600" fill="#654321" opacity="0.3"/>
+  <rect x="1500" y="0" width="8" height="600" fill="#654321" opacity="0.4"/>
+  
+  <!-- Simulación de luces cálidas -->
+  <circle cx="300" cy="100" r="40" fill="#FFD700" opacity="0.1"/>
+  <circle cx="700" cy="120" r="50" fill="#FFD700" opacity="0.15"/>
+  <circle cx="1100" cy="80" r="45" fill="#FFD700" opacity="0.12"/>
+  <circle cx="1400" cy="110" r="40" fill="#FFD700" opacity="0.1"/>
+  
+  <!-- Elementos arquitectónicos vascos estilizados -->
+  <path d="M0 500 Q200 480 400 500 T800 500 Q1000 480 1200 500 T1920 500 L1920 600 L0 600 Z" fill="#654321" opacity="0.2"/>
+  
+  <!-- Sombras para dar profundidad -->
+  <ellipse cx="960" cy="550" rx="400" ry="30" fill="#000000" opacity="0.1"/>
+  
+  <!-- Detalles decorativos en las esquinas -->
+  <path d="M0 0 L100 0 L80 20 L20 80 L0 100 Z" fill="#654321" opacity="0.3"/>
+  <path d="M1920 0 L1820 0 L1840 20 L1900 80 L1920 100 Z" fill="#654321" opacity="0.3"/>
+  
+  <!-- Texto placeholder para indicar que es una imagen de placeholder -->
+  <text x="960" y="300" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#FFFFFF" opacity="0.7">
+    HERO IMAGE PLACEHOLDER
+  </text>
+  <text x="960" y="330" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#FFFFFF" opacity="0.5">
+    Ambiente tradicional vasco - 1920x600px
+  </text>
+</svg>

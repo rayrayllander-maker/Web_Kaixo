@@ -1,0 +1,53 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo beige/crema -->
+  <rect width="120" height="120" fill="#f5f5dc" rx="8"/>
+  
+  <!-- Semicírculo superior marrón -->
+  <path d="M 20 50 Q 60 20 100 50 L 100 50 L 20 50 Z" fill="#8B4513"/>
+  
+  <!-- Texto "Bar" en cursiva elegante -->
+  <text x="60" y="45" font-family="serif" font-size="16" font-weight="normal" font-style="italic" text-anchor="middle" fill="#D2B48C">Bar</text>
+  
+  <!-- Líneas horizontales decorativas -->
+  <rect x="15" y="52" width="90" height="2" fill="#8B4513"/>
+  <rect x="15" y="82" width="90" height="2" fill="#8B4513"/>
+  
+  <!-- Texto "KAIXO" en letras grandes y decorativas -->
+  <g font-family="serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#8B4513">
+    <!-- Letras con efecto 3D/relieve -->
+    <text x="25" y="75">K</text>
+    <text x="40" y="75">A</text>
+    <text x="55" y="75">I</text>
+    <text x="70" y="75">X</text>
+    <text x="95" y="75">O</text>
+  </g>
+  
+  <!-- Sombra/relieve para las letras -->
+  <g font-family="serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#D2B48C" opacity="0.6">
+    <text x="26" y="76">K</text>
+    <text x="41" y="76">A</text>
+    <text x="56" y="76">I</text>
+    <text x="71" y="76">X</text>
+    <text x="96" y="76">O</text>
+  </g>
+  
+  <!-- Jarras de cerveza en la parte inferior -->
+  <g transform="translate(45, 90)">
+    <!-- Jarra izquierda -->
+    <rect x="0" y="0" width="10" height="15" fill="#FFD700" rx="1"/>
+    <rect x="0" y="0" width="10" height="3" fill="#FFF8DC"/>
+    <rect x="10" y="5" width="3" height="5" fill="#FFD700" rx="1"/>
+    
+    <!-- Jarra derecha -->
+    <rect x="15" y="0" width="10" height="15" fill="#FFD700" rx="1"/>
+    <rect x="15" y="0" width="10" height="3" fill="#FFF8DC"/>
+    <rect x="12" y="5" width="3" height="5" fill="#FFD700" rx="1"/>
+    
+    <!-- Líneas de movimiento/brindis -->
+    <path d="M 5 -2 Q 10 -5 15 -2" stroke="#FFD700" stroke-width="1" fill="none"/>
+    <path d="M 20 -2 Q 15 -5 10 -2" stroke="#FFD700" stroke-width="1" fill="none"/>
+  </g>
+  
+  <!-- Borde decorativo -->
+  <rect x="2" y="2" width="116" height="116" fill="none" stroke="#8B4513" stroke-width="1" rx="6"/>
+</svg>
