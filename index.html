@@ -14,11 +14,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Pantalla de carga / Preloader -->
+    <div id="app-preloader" role="status" aria-live="polite" aria-busy="true">
+        <div class="loader-card">
+            <img class="loader-logo" src="logo.png" alt="" aria-hidden="true">
+            <div class="loader-visual is-spinner" aria-hidden="true">
+                <div class="loader-spinner"></div>
+                <div class="loader-bars">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="loader-ripple">
+                    <span></span><span></span>
+                </div>
+                <div class="loader-orbit">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+            <p class="loader-text">Cargando imágenes… <span id="loader-progress">0%</span></p>
+        </div>
+    </div>
     <!-- Navegación Principal -->
     <nav class="navbar" role="navigation" aria-label="Navegación principal">
         <div class="nav-container">
             <a href="#menu" class="nav-logo-link" aria-label="Ir al inicio del menú">
-                <img src="01_bar_kaixo/logo.png" alt="Bar Kaixo" class="nav-logo">
+                <img src="logo.png" alt="Bar Kaixo" class="nav-logo">
             </a>
             <div class="nav-links">
                 <a href="#inicio" aria-label="Ir a inicio">Inicio</a>
@@ -112,7 +133,7 @@
                     </div>
                     <article class="menu-card" data-category="entrantes-raciones">
                         <div class="card-image">
-                            <img src="01_bar_kaixo/card1.jpg" alt="Patatas bravas" loading="lazy">
+                            <img src="patatas_bravas.png" alt="Patatas bravas" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Patatas bravas</h3>
@@ -122,7 +143,7 @@
 
                     <article class="menu-card" data-category="entrantes-raciones">
                         <div class="card-image">
-                            <img src="01_bar_kaixo/card2.jpg" alt="Fingers de pollo" loading="lazy">
+                            <img src="fingers_de_pollo.png" alt="Fingers de pollo" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Fingers de pollo</h3>
@@ -132,7 +153,7 @@
 
                     <article class="menu-card" data-category="entrantes-raciones">
                         <div class="card-image">
-                            <img src="01_bar_kaixo/card3.jpg" alt="Chorizo frito" loading="lazy">
+                            <img src="chorizo_frito.png" alt="Chorizo frito" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Chorizo frito</h3>
@@ -176,7 +197,7 @@
                     </div>
                     <article class="menu-card" data-category="ensaladas">
                         <div class="card-image">
-                            <img src="01_bar_kaixo/card1.jpg" alt="Ensalada Mixta" loading="lazy">
+                            <img src="ensalada_mixta.png" alt="Ensalada Mixta" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Ensalada Mixta</h3>
@@ -384,7 +405,7 @@
                     </div>
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card1.jpg" alt="Pechuga de pollo - plato combinado" loading="lazy">
+                            <img src="pc_pechuga.png" alt="Pechuga de pollo - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Pechuga de pollo</h3>
@@ -395,7 +416,7 @@
 
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card2.jpg" alt="Lomo - plato combinado" loading="lazy">
+                            <img src="01_bar_kaixo/card2.jpg" alt="Lomo - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Lomo</h3>
@@ -406,7 +427,7 @@
 
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card3.jpg" alt="Chorizo - plato combinado" loading="lazy">
+                            <img src="01_bar_kaixo/card3.jpg" alt="Chorizo - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Chorizo</h3>
@@ -417,7 +438,7 @@
 
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card1.jpg" alt="Panceta - plato combinado" loading="lazy">
+                            <img src="01_bar_kaixo/card1.jpg" alt="Panceta - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Panceta</h3>
@@ -428,7 +449,7 @@
 
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card2.jpg" alt="Escalope de pollo - plato combinado" loading="lazy">
+                            <img src="01_bar_kaixo/card2.jpg" alt="Escalope de pollo - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Escalope de pollo</h3>
@@ -439,7 +460,7 @@
 
                     <article class="menu-card" data-category="platos-combinados">
                         <div class="card-image">
-                            <img src="assets/card3.jpg" alt="Escalope de carne - plato combinado" loading="lazy">
+                            <img src="01_bar_kaixo/card3.jpg" alt="Escalope de carne - plato combinado" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h3>Escalope de carne</h3>

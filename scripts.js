@@ -801,6 +801,9 @@
             // Configuración de lazy loading mejorado
             setupEnhancedLazyLoading();
 
+            // Preloader de imágenes
+            setupPreloader();
+
             console.log('Bar Kaixo: Todos los componentes inicializados correctamente');
             
         } catch (error) {
@@ -839,6 +842,82 @@
                 imageObserver.observe(img);
             });
         }
+    }
+
+    // ===== PRE-CARGA DE IMÁGENES CON PANTALLA DE CARGA =====
+    function setupPreloader() {
+        const overlay = document.getElementById('app-preloader');
+        if (!overlay) return;
+
+        const progressEl = document.getElementById('loader-progress');
+
+        // Selección de variante visual: spinner (por defecto), bars, ripple, orbit
+        const visual = overlay.querySelector('.loader-visual');
+        if (visual) {
+            const variants = ['is-spinner','is-bars','is-ripple','is-orbit'];
+            const attr = overlay.getAttribute('data-loader');
+            let chosen = variants[0];
+            if (attr && variants.includes(`is-${attr}`)) {
+                chosen = `is-${attr}`;
+            } else {
+                // opción: elegir al azar para dar variedad en cada visita
+                chosen = variants[Math.floor(Math.random() * variants.length)];
+            }
+            visual.classList.remove(...variants);
+            visual.classList.add(chosen);
+        }
+
+        // Reunir todas las URLs de imágenes únicas presentes en el DOM (src y data-src)
+        const domImgs = Array.from(document.querySelectorAll('img'));
+        const urls = new Set();
+        domImgs.forEach(img => {
+            const src = img.getAttribute('src');
+            const dataSrc = img.getAttribute('data-src');
+            if (src) urls.add(src);
+            if (dataSrc) urls.add(dataSrc);
+        });
+
+        const imgUrls = Array.from(urls);
+        if (imgUrls.length === 0) {
+            overlay.classList.add('hidden');
+            setTimeout(() => overlay.remove(), 250);
+            return;
+        }
+
+        let loaded = 0;
+        const total = imgUrls.length;
+        const update = () => {
+            loaded++;
+            const pct = Math.min(100, Math.round((loaded / total) * 100));
+            if (progressEl) progressEl.textContent = pct + '%';
+            if (loaded >= total) {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 300);
+            }
+        };
+
+        // Disparar precarga creando objetos Image por URL única
+        imgUrls.forEach(url => {
+            const img = new Image();
+            img.onload = update;
+            img.onerror = update;
+            img.src = url;
+        });
+
+        // Además, enganchar imágenes del DOM que aún no hayan empezado a cargar (por si lazy)
+        domImgs.forEach(img => {
+            if (!img.complete && img.dataset && img.dataset.src && !img.getAttribute('src')) {
+                img.src = img.dataset.src;
+            }
+        });
+
+        // Fallback de tiempo máximo
+        setTimeout(() => {
+            if (!overlay.classList.contains('hidden')) {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 300);
+            }
+        }, 8000);
     }
 
     // ===== EXPONER API PÚBLICA =====
