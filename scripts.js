@@ -651,6 +651,37 @@
                 onEnd && onEnd();
             };
         }
+
+        // Fallback automático si las rutas de imágenes se han movido de /assets a /01_bar_kaixo o raíz
+        static setupImageRelocationFallback() {
+            document.addEventListener('error', (e) => {
+                const target = e.target;
+                if (!target || target.tagName !== 'IMG') return;
+
+                const img = target;
+                const nameMatch = (img.getAttribute('data-original-src') || img.getAttribute('src') || '').split('/').pop();
+                const fileName = (nameMatch || '').split('?')[0];
+                if (!fileName) return;
+
+                const idx = parseInt(img.dataset.fallbackIndex || '0', 10);
+                const candidates = [];
+
+                // Prioridad nueva: 01_bar_kaixo/, luego mismo directorio, y por último assets/
+                candidates.push(`01_bar_kaixo/${fileName}`);
+                candidates.push(`${fileName}`);
+                candidates.push(`assets/${fileName}`);
+
+                if (idx >= candidates.length) return; // sin más opciones
+
+                // Guardar src original si aún no lo hemos hecho
+                if (!img.getAttribute('data-original-src')) {
+                    img.setAttribute('data-original-src', img.getAttribute('src') || '');
+                }
+
+                img.dataset.fallbackIndex = String(idx + 1);
+                img.src = candidates[idx];
+            }, true);
+        }
     }
 
     // ===== MEJORAS DE NAVEGACIÓN =====
@@ -755,6 +786,9 @@
                 const heroImg = document.querySelector('.hero-image img');
                 if (heroImg) heroImg.setAttribute('fetchpriority', 'high');
             } catch (_) {}
+
+            // Fallback de reubicación de imágenes (por si se movieron de carpeta)
+            Utils.setupImageRelocationFallback();
 
             // Inicializar componentes
             new CategoryFilter();
