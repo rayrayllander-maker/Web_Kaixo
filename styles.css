@@ -1402,36 +1402,45 @@ body {
 /* ===== BOTÓN DE MODO OSCURO ===== */
 .theme-toggle {
   position: relative;
-  width: 60px;
-  height: 30px;
+  width: 70px;
+  height: 36px;
   background: var(--green-light);
   border: 2px solid var(--green);
-  border-radius: 15px;
+  border-radius: 18px;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding: 3px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Increased hitbox with transparent padding */
+  margin: -8px;
+  padding: 11px;
+  background-clip: content-box;
 }
 
 .theme-toggle:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:active {
+  transform: scale(1.02);
 }
 
 .theme-toggle:focus {
   outline: 2px solid var(--cta-red);
-  outline-offset: 2px;
+  outline-offset: 4px;
 }
 
 .theme-toggle-slider {
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   background: var(--text-light);
   border-radius: 50%;
-  transition: transform var(--transition);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1440,36 +1449,50 @@ body {
 }
 
 [data-theme="dark"] .theme-toggle-slider {
-  transform: translateX(30px);
+  transform: translateX(34px);
 }
 
 .theme-toggle-icon {
   position: absolute;
-  font-size: 16px;
-  transition: opacity var(--transition);
+  font-size: 18px;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
 
 .theme-toggle-icon.sun {
-  left: 8px;
+  left: 10px;
   opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
 .theme-toggle-icon.moon {
-  right: 8px;
+  right: 10px;
   opacity: 0.5;
+  transform: rotate(-30deg) scale(0.9);
 }
 
 [data-theme="dark"] .theme-toggle-icon.sun {
   opacity: 0.5;
+  transform: rotate(180deg) scale(0.9);
 }
 
 [data-theme="dark"] .theme-toggle-icon.moon {
   opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
 [data-theme="dark"] .theme-toggle {
   background: var(--text-dark);
   border-color: var(--cta-red);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle-slider,
+  .theme-toggle-icon {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ===== ESTADOS DE CARGA Y PLACEHOLDER ===== */
