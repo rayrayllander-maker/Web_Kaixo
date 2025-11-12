@@ -188,6 +188,11 @@ body {
   overflow: hidden;
 }
 
+.nav-container .theme-toggle {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 /* Estado colapsado al hacer scroll: solo logo visible y centrado */
 .navbar.collapsed .nav-container {
   justify-content: center;
@@ -203,6 +208,13 @@ body {
   max-width: 0;
   opacity: 0;
   transform: translateY(-8px);
+}
+
+.navbar.collapsed .theme-toggle {
+  position: absolute;
+  right: var(--container-padding);
+  top: 50%;
+  margin-top: -15px; /* centra verticalmente el botón (alto 30px) */
 }
 
 .navbar.collapsed {
@@ -1404,15 +1416,18 @@ body {
   position: relative;
   width: 60px;
   height: 30px;
-  background: var(--green-light);
-  border: 2px solid var(--green);
+  background: linear-gradient(135deg, rgba(156, 222, 159, 0.92) 0%, rgba(255, 201, 185, 0.92) 100%);
+  border: 1px solid rgba(4, 119, 59, 0.38);
   border-radius: 15px;
   cursor: pointer;
   transition: all var(--transition);
   display: flex;
   align-items: center;
   padding: 2px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 2px 4px rgba(4, 119, 59, 0.18),
+    0 4px 16px rgba(4, 119, 59, 0.12);
+  isolation: isolate; /* asegura que el knob pueda ir detrás sin interferir */
 }
 
 .theme-toggle:hover {
@@ -1426,50 +1441,72 @@ body {
 
 .theme-toggle-slider {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  background: var(--text-light);
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.78) 100%);
   border-radius: 50%;
   transition: transform var(--transition);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 6px rgba(191, 6, 3, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   left: 3px;
+  z-index: 0;
 }
 
 [data-theme="dark"] .theme-toggle-slider {
-  transform: translateX(30px);
+  transform: translateX(28px);
 }
 
 .theme-toggle-icon {
   position: absolute;
   font-size: 16px;
-  transition: opacity var(--transition);
+  transition: opacity var(--transition), color var(--transition);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .theme-toggle-icon.sun {
-  left: 8px;
+  left: 3px;
   opacity: 1;
+  color: #f7b733;
 }
 
 .theme-toggle-icon.moon {
-  right: 8px;
+  right: 3px;
   opacity: 0.5;
+  color: #fbe4b0;
 }
 
 [data-theme="dark"] .theme-toggle-icon.sun {
-  opacity: 0.5;
+  opacity: 0.42;
+  color: #fbd38d;
 }
 
 [data-theme="dark"] .theme-toggle-icon.moon {
   opacity: 1;
+  color: #f7f7ff;
 }
 
 [data-theme="dark"] .theme-toggle {
-  background: var(--text-dark);
-  border-color: var(--cta-red);
+  background: linear-gradient(135deg, rgba(61, 42, 41, 0.9) 0%, rgba(45, 90, 63, 0.9) 100%);
+  border-color: rgba(255, 183, 77, 0.45);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.28),
+    0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .theme-toggle-slider {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(76, 175, 80, 0.38) 100%);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* ===== ESTADOS DE CARGA Y PLACEHOLDER ===== */
