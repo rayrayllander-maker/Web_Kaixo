@@ -38,8 +38,77 @@
         timeField: document.getElementById('time'),
         guestsField: document.getElementById('guests'),
         phoneField: document.getElementById('phone'),
-        notesField: document.getElementById('notes')
+        notesField: document.getElementById('notes'),
+        
+        // Tema oscuro
+        themeToggle: document.getElementById('theme-toggle')
     };
+
+    // ===== GESTIÓN DE TEMA OSCURO =====
+    class ThemeManager {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            // Cargar preferencia guardada o usar preferencia del sistema
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            this.setTheme(initialTheme);
+            this.bindEvents();
+        }
+
+        bindEvents() {
+            elements.themeToggle?.addEventListener('click', () => this.toggleTheme());
+            
+            // Escuchar cambios en la preferencia del sistema
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    this.setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            this.setTheme(newTheme);
+            
+            // Anunciar cambio para accesibilidad
+            this.announceThemeChange(newTheme);
+        }
+
+        setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Actualizar aria-label del botón
+            if (elements.themeToggle) {
+                const label = theme === 'dark' 
+                    ? 'Cambiar a modo claro' 
+                    : 'Cambiar a modo oscuro';
+                elements.themeToggle.setAttribute('aria-label', label);
+                elements.themeToggle.setAttribute('title', label);
+            }
+        }
+
+        announceThemeChange(theme) {
+            const message = theme === 'dark' 
+                ? 'Modo oscuro activado' 
+                : 'Modo claro activado';
+            
+            const announcer = document.createElement('div');
+            announcer.setAttribute('aria-live', 'polite');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.className = 'sr-only';
+            announcer.textContent = message;
+            
+            document.body.appendChild(announcer);
+            setTimeout(() => document.body.removeChild(announcer), 1000);
+        }
+    }
 
     // ===== GESTIÓN DE FILTROS DE CATEGORÍAS =====
     class CategoryFilter {
@@ -791,6 +860,7 @@
             Utils.setupImageRelocationFallback();
 
             // Inicializar componentes
+            new ThemeManager();
             new CategoryFilter();
             new ReservationModal();
             new NavigationEnhancements();
