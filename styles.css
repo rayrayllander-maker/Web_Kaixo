@@ -1,6 +1,6 @@
 /* ===== VARIABLES CSS GLOBALES ===== */
 :root {
-  /* Nueva paleta de colores */
+  /* Nueva paleta de colores - Modo claro */
   --bg-light: #ffc9b9;        /* Rosa salmón claro para fondos */
   --cta-red: #BF0603;          /* Rojo intenso para CTAs */
   --text-dark: #292929;        /* Gris oscuro para texto principal */
@@ -9,6 +9,24 @@
   --text-light: #ffffff;       /* Blanco para texto sobre fondos oscuros */
   --text-muted: #6b7280;       /* Gris medio para texto secundario */
   --badge-yellow: #f2c94c;     /* Mantengo el amarillo para badges populares */
+  
+  /* Variables específicas del modo claro */
+  --body-bg: linear-gradient(180deg, #ffffff 0%, #f3fbf6 30%, #e7f7ed 60%, #d8f2e2 100%);
+  --body-bg-radial-1: rgba(156, 222, 159, 0.45);
+  --body-bg-radial-2: rgba(4, 119, 59, 0.22);
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --navbar-border: rgba(4, 119, 59, 0.25);
+  --navbar-shadow: rgba(4, 119, 59, 0.18);
+  --card-bg: linear-gradient(145deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
+  --card-border: rgba(156, 222, 159, 0.2);
+  --hero-overlay: linear-gradient(180deg, rgba(41, 41, 41, 0.5) 0%, rgba(4, 119, 59, 0.35) 50%, rgba(4, 119, 59, 0.2) 100%);
+  --pills-bg: linear-gradient(135deg, #9cde9f 0%, rgba(255, 201, 185, 0.8) 100%);
+  --pills-shadow: rgba(156, 222, 159, 0.3);
+  --modal-overlay-bg: linear-gradient(135deg, rgba(41, 41, 41, 0.8) 0%, rgba(4, 119, 59, 0.6) 100%);
+  --input-bg: #ffffff;
+  --input-border: #e5e7eb;
+  --separator-bg: rgba(156, 222, 159, 0.25);
+  --separator-border: rgba(4, 119, 59, 0.25);
   
   /* Layout y espaciado */
   --max-w: 1200px;
@@ -35,6 +53,42 @@
   --font-size-4xl: 2.25rem;
 }
 
+/* ===== MODO OSCURO ===== */
+[data-theme="dark"] {
+  /* Paleta de colores ajustada para modo oscuro */
+  --bg-light: #3d2a29;        /* Marrón oscuro para fondos */
+  --cta-red: #ff4444;         /* Rojo más brillante para CTAs en modo oscuro */
+  --text-dark: #e8e8e8;       /* Texto claro para modo oscuro */
+  --green-light: #2d5a3f;     /* Verde oscuro para fondos secundarios */
+  --green: #4caf50;           /* Verde más brillante para acentos */
+  --text-light: #ffffff;      /* Mantener blanco */
+  --text-muted: #a0a0a0;      /* Gris claro para texto secundario */
+  --badge-yellow: #ffb74d;    /* Amarillo más suave para badges */
+  
+  /* Variables específicas del modo oscuro */
+  --body-bg: linear-gradient(180deg, #1a1a1a 0%, #1e2d23 30%, #152319 60%, #0f1a13 100%);
+  --body-bg-radial-1: rgba(45, 90, 63, 0.35);
+  --body-bg-radial-2: rgba(76, 175, 80, 0.15);
+  --navbar-bg: rgba(30, 30, 30, 0.92);
+  --navbar-border: rgba(76, 175, 80, 0.3);
+  --navbar-shadow: rgba(0, 0, 0, 0.4);
+  --card-bg: linear-gradient(145deg, #2a2a2a 0%, rgba(40, 40, 40, 0.95) 100%);
+  --card-border: rgba(76, 175, 80, 0.25);
+  --hero-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(45, 90, 63, 0.5) 50%, rgba(45, 90, 63, 0.35) 100%);
+  --pills-bg: linear-gradient(135deg, #2d5a3f 0%, rgba(61, 42, 41, 0.9) 100%);
+  --pills-shadow: rgba(0, 0, 0, 0.4);
+  --modal-overlay-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(45, 90, 63, 0.7) 100%);
+  --input-bg: #2a2a2a;
+  --input-border: #404040;
+  --separator-bg: rgba(76, 175, 80, 0.2);
+  --separator-border: rgba(76, 175, 80, 0.3);
+  
+  /* Sombras ajustadas para modo oscuro */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
 /* ===== RESET Y BASE ===== */
 * {
   margin: 0;
@@ -51,14 +105,15 @@ body {
   font-size: var(--font-size-base);
   line-height: 1.6;
   color: var(--text-dark);
-  /* Fondo en tonos verdes */
+  /* Fondo en tonos verdes con variables dinámicas */
   background:
-    radial-gradient(1200px 600px at 15% 85%, rgba(156, 222, 159, 0.45) 0%, rgba(156, 222, 159, 0) 60%),
-    radial-gradient(1000px 500px at 85% 15%, rgba(4, 119, 59, 0.22) 0%, rgba(4, 119, 59, 0) 60%),
-    linear-gradient(180deg, #ffffff 0%, #f3fbf6 30%, #e7f7ed 60%, #d8f2e2 100%);
+    radial-gradient(1200px 600px at 15% 85%, var(--body-bg-radial-1) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 85% 15%, var(--body-bg-radial-2) 0%, transparent 60%),
+    var(--body-bg);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ===== COMPONENTES UTILITARIOS ===== */
@@ -86,13 +141,13 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--navbar-bg);
   backdrop-filter: saturate(120%) blur(12px);
   /* Sombra con tono verde para cohesión */
-  box-shadow: 0 8px 24px rgba(4, 119, 59, 0.18);
+  box-shadow: 0 8px 24px var(--navbar-shadow);
   z-index: 100;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(4, 119, 59, 0.25);
+  border-bottom: 1px solid var(--navbar-border);
   transition: padding 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
 }
 
@@ -101,9 +156,10 @@ body {
   margin: 0 auto;
   padding: 0 var(--container-padding);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative; /* necesario para centrar el logo absoluto */
+  gap: 1rem;
 }
 
 .nav-logo-link {
@@ -151,8 +207,8 @@ body {
 
 .navbar.collapsed {
   padding: 0.5rem 0;
-  box-shadow: 0 4px 16px rgba(4, 119, 59, 0.15);
-  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 16px var(--navbar-shadow);
+  background: var(--navbar-bg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -260,8 +316,7 @@ body {
   width: 100%;
   height: 100%;
   /* Overlay verdoso con oscuro arriba para legibilidad */
-  background:
-    linear-gradient(180deg, rgba(41, 41, 41, 0.5) 0%, rgba(4, 119, 59, 0.35) 50%, rgba(4, 119, 59, 0.2) 100%);
+  background: var(--hero-overlay);
   z-index: 2;
 }
 
@@ -538,11 +593,11 @@ body {
 .category-pills {
   display: flex;
   gap: 0.75rem;
-  background: linear-gradient(135deg, var(--green-light) 0%, rgba(255, 201, 185, 0.8) 100%);
+  background: var(--pills-bg);
   padding: 0.75rem;
   border-radius: 24px;
   box-shadow: 
-    0 8px 32px rgba(156, 222, 159, 0.3),
+    0 8px 32px var(--pills-shadow),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
@@ -721,8 +776,8 @@ body {
   display: inline-block;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  background: rgba(156, 222, 159, 0.25);
-  border: 1px solid rgba(4, 119, 59, 0.25);
+  background: var(--separator-bg);
+  border: 1px solid var(--separator-border);
   box-shadow: 0 4px 12px rgba(4, 119, 59, 0.06);
   transition: all var(--transition);
 }
@@ -739,7 +794,7 @@ body {
 }
 
 .menu-card {
-  background: linear-gradient(145deg, var(--text-light) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: var(--card-bg);
   border-radius: 20px;
   box-shadow: 
     0 10px 30px rgba(0, 0, 0, 0.1),
@@ -747,7 +802,7 @@ body {
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
-  border: 1px solid rgba(156, 222, 159, 0.2);
+  border: 1px solid var(--card-border);
   position: relative;
 }
 
@@ -882,7 +937,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(41, 41, 41, 0.8) 0%, rgba(4, 119, 59, 0.6) 100%);
+  background: var(--modal-overlay-bg);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -900,7 +955,7 @@ body {
 }
 
 .modal-content {
-  background: var(--text-light);
+  background: var(--input-bg);
   border-radius: var(--modal-radius);
   box-shadow: var(--shadow-heavy);
   width: 100%;
@@ -975,12 +1030,13 @@ body {
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--input-border);
   border-radius: 8px;
   font-size: var(--font-size-base);
   font-family: inherit;
   transition: border-color var(--transition);
-  background: var(--text-light);
+  background: var(--input-bg);
+  color: var(--text-dark);
 }
 
 .form-group input:focus,
@@ -1343,6 +1399,79 @@ body {
   }
 }
 
+/* ===== BOTÓN DE MODO OSCURO ===== */
+.theme-toggle {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background: var(--green-light);
+  border: 2px solid var(--green);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+}
+
+.theme-toggle:focus {
+  outline: 2px solid var(--cta-red);
+  outline-offset: 2px;
+}
+
+.theme-toggle-slider {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: var(--text-light);
+  border-radius: 50%;
+  transition: transform var(--transition);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  left: 3px;
+}
+
+[data-theme="dark"] .theme-toggle-slider {
+  transform: translateX(30px);
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  font-size: 16px;
+  transition: opacity var(--transition);
+}
+
+.theme-toggle-icon.sun {
+  left: 8px;
+  opacity: 1;
+}
+
+.theme-toggle-icon.moon {
+  right: 8px;
+  opacity: 0.5;
+}
+
+[data-theme="dark"] .theme-toggle-icon.sun {
+  opacity: 0.5;
+}
+
+[data-theme="dark"] .theme-toggle-icon.moon {
+  opacity: 1;
+}
+
+[data-theme="dark"] .theme-toggle {
+  background: var(--text-dark);
+  border-color: var(--cta-red);
+}
+
 /* ===== ESTADOS DE CARGA Y PLACEHOLDER ===== */
 .loading {
   opacity: 0.6;
@@ -1373,9 +1502,9 @@ body {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(1200px 600px at 15% 85%, rgba(156, 222, 159, 0.45) 0%, rgba(156, 222, 159, 0) 60%),
-    radial-gradient(1000px 500px at 85% 15%, rgba(4, 119, 59, 0.22) 0%, rgba(4, 119, 59, 0) 60%),
-    linear-gradient(180deg, #ffffff 0%, #f3fbf6 30%, #e7f7ed 60%, #d8f2e2 100%);
+    radial-gradient(1200px 600px at 15% 85%, var(--body-bg-radial-1) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 85% 15%, var(--body-bg-radial-2) 0%, transparent 60%),
+    var(--body-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1389,8 +1518,8 @@ body {
 }
 
 .loader-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(156, 222, 159, 0.35);
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   padding: 2rem 2.5rem;
   box-shadow: 0 20px 60px rgba(4, 119, 59, 0.15);
